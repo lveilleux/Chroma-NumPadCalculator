@@ -7,7 +7,7 @@
     At that point the final answer will be spit back out digit by digit for the final answer. 
     The command window also prints out everything input and outputted as needed.
     </description> <!-- Brief description of your application -->
-    <author name="Luke Veilleux" contact="http://www.lveilleux.com/chroma"/> <!-- Contact details -->
+    <author name="Luke Veilleux" contact="http://www.lveilleux.me/chroma"/> <!-- Contact details -->
     <device_supported keyboard="1" mouse="0" headset="0" mousemat="0" keypad="0"/> <!-- Device supported by the application -->
   <category game="0"></category> <!-- App category. Default is an app. If the app is a game, set it to "1" -->
 </application>
