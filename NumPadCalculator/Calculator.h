@@ -42,10 +42,10 @@ public:
 
 	void ResetEffects(UINT DeviceType);
 	//Define your methods here
-	BOOL no_operation_flash();
+	BOOL no_operation_flash(ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE);
 	int do_math(int, int, int);
-	BOOL flash_result(int);
-
+	BOOL flash_result(int, ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE);
+	ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE set_background_effect();
 
 	BOOL IsDeviceConnected(RZDEVICEID DeviceId);
 

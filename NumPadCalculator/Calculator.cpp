@@ -109,9 +109,9 @@ void Num_Pad_Calculator::ResetEffects(UINT DeviceType) {
 	}
 }
 
-BOOL Num_Pad_Calculator::no_operation_flash() {
-	// Source: http://developer.razerzone.com/chroma/razer-chroma-led-profiles/
-	ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE keyboard_effect = {}; //Initialize
+BOOL Num_Pad_Calculator::no_operation_flash(ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE keyboard_effect) {
+	// Source for the key indexes
+	// http://developer.razerzone.com/chroma/razer-chroma-led-profiles/
 	int count = 0;
 	RZRESULT Result_Keyboard;
 	while (count < 10) {
@@ -140,17 +140,12 @@ BOOL Num_Pad_Calculator::no_operation_flash() {
 
 }
 
-BOOL Num_Pad_Calculator::flash_result(int result) {
+BOOL Num_Pad_Calculator::flash_result(int result, ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE keyboard_effect) {
 	cout << " Result: " << result << endl;
-	ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE keyboard_effect = {}; //Initialize
 	RZRESULT Result_Keyboard;
 	std::vector <std::pair<int, int>> result_vector;
-	//Set every key to use the BACKGROUND color defined in Calculator.h
-	for (UINT row = 0; row < ChromaSDK::Keyboard::MAX_ROW; row++) {
-		for (UINT col = 0; col < ChromaSDK::Keyboard::MAX_COLUMN; col++) {
-			keyboard_effect.Color[row][col] = BACKGROUND;
-		}
-	}
+	Num_Pad_Calculator calc;
+	keyboard_effect = calc.set_background_effect();
 
 	bool negative_flag = false;
 	if (result < 0) {
@@ -216,6 +211,9 @@ BOOL Num_Pad_Calculator::flash_result(int result) {
 }
 
 int Num_Pad_Calculator::do_math(int number1, int number2, int operation) {
+	if (number2 == 0) {
+		return 0;
+	}
 	cout << "Number1: " << number1 << " || Number2: " << number2 << " OPP: " << operation << " |||| ";
 	switch (operation) {
 	case 90 :						//Add
@@ -227,12 +225,29 @@ int Num_Pad_Calculator::do_math(int number1, int number2, int operation) {
 	case 93 :						//Divide
 		return number1 /= number2;
 	}
+	return 1;
 }
+
+ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE Num_Pad_Calculator::set_background_effect() {
+	//Creates a blank ChromaSDK Keyboard effect object to add in background effects
+	//for the rest of the keyboard, which is returned to the calling function.
+	//Currently onld does Static effects. Background color is found in Calculator.h
+	ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE keyboard = {};
+
+	for (UINT row = 0; row < ChromaSDK::Keyboard::MAX_ROW; row++) {
+		for (UINT col = 0; col < ChromaSDK::Keyboard::MAX_COLUMN; col++) {
+			keyboard.Color[row][col] = BACKGROUND;
+		}
+	}
+	return keyboard;
+}
+
 
 int main() {
 
 	Num_Pad_Calculator impl_test;
 	BOOL test_for_init = impl_test.Initialize();
+	ChromaSDK::Keyboard::CUSTOM_EFFECT_TYPE keyboard = impl_test.set_background_effect();
 	bool initial_num = true;
 	if (test_for_init) {
 		while (true) {
@@ -283,11 +298,11 @@ int main() {
 				}
 				else {
 					if (operation == -1) {
-						impl_test.no_operation_flash();
+						impl_test.no_operation_flash(keyboard);
 					}
 					else {
 						num1 = impl_test.do_math(num1, num2, operation);
-						impl_test.flash_result(num1);
+						impl_test.flash_result(num1, keyboard);
 						operation = -1;
 						num2 = 0;
 						num1 = 0;
